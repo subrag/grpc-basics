@@ -1,0 +1,39 @@
+syntax = "proto3";
+
+package user;
+
+
+import "google/protobuf/timestamp.proto";
+option go_package = "github.com/subrag/grpc-basics/proto";
+
+message UserProfile {
+    string name = 1;
+    int32 id = 2;
+
+    enum DeptType {
+        DELIVERY = 0;
+        FINANCE = 1;
+        OPS = 2;
+    }
+    DeptType department = 3; 
+    google.protobuf.Timestamp last_updated = 4;
+}
+
+message Project {
+    string name = 1;
+    int32 id = 2;
+}
+
+message Assignment {
+    Project project = 1;
+    repeated UserProfile assignee = 2;
+}
+
+service UserService {
+    rpc GetProject (UserProfile) returns (Project);
+
+}
+
+service ProjectService {
+    rpc GetAssignment(Project) returns (Assignment);
+}

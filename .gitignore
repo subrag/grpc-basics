@@ -1,0 +1,61 @@
+tmp/
+*.swp
+**/env.sh
+**/test-env.sh
+
+test-reports/
+coverage/
+spec-reports/
+
+bundle.yaml
+
+# Go: Binaries for programs and plugins
+*.exe
+*.dll
+*.so
+*.dylib
+
+# Test binary, build with `go test -c`
+*.test
+
+# Output of the go coverage tool, specifically when used with LiteIDE
+*.out
+
+# Project-local glide cache, RE: https://github.com/Masterminds/glide/issues/736
+.glide/
+vendor/
+
+# Visual Studio Code generated folder
+debug
+
+# VSCode Redocly plugin config
+.redocly.yaml
+
+# Goland, IntelliJ:
+# Reference: https://intellij-support.jetbrains.com/hc/en-us/articles/206544839
+
+# User-specific stuff:
+.idea/**/workspace.xml
+.idea/**/tasks.xml
+.idea/dictionaries
+
+# Temporary file created by Mac
+.DS_Store
+
+# bin
+bin/
+
+# .idea/
+.idea/
+!/.idea/runConfigurations
+
+
+# generaged sql files
+cmd/functional-test/mysql-init.d/00-iam.sql
+cmd/functional-test/mysql-init.d/01-users.sql
+
+gathered-logs/
+
+minikube/mysql-config/
+.vscode/launch.json
+.vscode/settings.json
