@@ -30,7 +30,7 @@ clean: clean_pb ## Clean generated files
 	${RM_RF_CMD} ${BIN_DIR}
 
 clean_pb: ## Clean generated files for greet
-	${RM_F_CMD} greet/${PROTO_DIR}/*.pb.go
+	${RM_F_CMD} ${PROTO_DIR}/*.pb.go
 
 
 rebuild: clean all ## Rebuild the whole project

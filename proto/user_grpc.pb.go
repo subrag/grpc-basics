@@ -110,6 +110,8 @@ var UserService_ServiceDesc = grpc.ServiceDesc{
 type ProjectServiceClient interface {
 	GetAssignment(ctx context.Context, in *Project, opts ...grpc.CallOption) (*Assignment, error)
 	GetAllProjects(ctx context.Context, in *EmptyRequest, opts ...grpc.CallOption) (ProjectService_GetAllProjectsClient, error)
+	CreateProjects(ctx context.Context, opts ...grpc.CallOption) (ProjectService_CreateProjectsClient, error)
+	CreateAssignments(ctx context.Context, opts ...grpc.CallOption) (ProjectService_CreateAssignmentsClient, error)
 }
 
 type projectServiceClient struct {
@@ -161,12 +163,79 @@ func (x *projectServiceGetAllProjectsClient) Recv() (*Project, error) {
 	return m, nil
 }
 
+func (c *projectServiceClient) CreateProjects(ctx context.Context, opts ...grpc.CallOption) (ProjectService_CreateProjectsClient, error) {
+	stream, err := c.cc.NewStream(ctx, &ProjectService_ServiceDesc.Streams[1], "/user.ProjectService/CreateProjects", opts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &projectServiceCreateProjectsClient{stream}
+	return x, nil
+}
+
+type ProjectService_CreateProjectsClient interface {
+	Send(*Project) error
+	CloseAndRecv() (*ResponseStatus, error)
+	grpc.ClientStream
+}
+
+type projectServiceCreateProjectsClient struct {
+	grpc.ClientStream
+}
+
+func (x *projectServiceCreateProjectsClient) Send(m *Project) error {
+	return x.ClientStream.SendMsg(m)
+}
+
+func (x *projectServiceCreateProjectsClient) CloseAndRecv() (*ResponseStatus, error) {
+	if err := x.ClientStream.CloseSend(); err != nil {
+		return nil, err
+	}
+	m := new(ResponseStatus)
+	if err := x.ClientStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
+func (c *projectServiceClient) CreateAssignments(ctx context.Context, opts ...grpc.CallOption) (ProjectService_CreateAssignmentsClient, error) {
+	stream, err := c.cc.NewStream(ctx, &ProjectService_ServiceDesc.Streams[2], "/user.ProjectService/CreateAssignments", opts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &projectServiceCreateAssignmentsClient{stream}
+	return x, nil
+}
+
+type ProjectService_CreateAssignmentsClient interface {
+	Send(*Project) error
+	Recv() (*Assignment, error)
+	grpc.ClientStream
+}
+
+type projectServiceCreateAssignmentsClient struct {
+	grpc.ClientStream
+}
+
+func (x *projectServiceCreateAssignmentsClient) Send(m *Project) error {
+	return x.ClientStream.SendMsg(m)
+}
+
+func (x *projectServiceCreateAssignmentsClient) Recv() (*Assignment, error) {
+	m := new(Assignment)
+	if err := x.ClientStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
 // ProjectServiceServer is the server API for ProjectService service.
 // All implementations must embed UnimplementedProjectServiceServer
 // for forward compatibility
 type ProjectServiceServer interface {
 	GetAssignment(context.Context, *Project) (*Assignment, error)
 	GetAllProjects(*EmptyRequest, ProjectService_GetAllProjectsServer) error
+	CreateProjects(ProjectService_CreateProjectsServer) error
+	CreateAssignments(ProjectService_CreateAssignmentsServer) error
 	mustEmbedUnimplementedProjectServiceServer()
 }
 
@@ -179,6 +248,12 @@ func (UnimplementedProjectServiceServer) GetAssignment(context.Context, *Project
 }
 func (UnimplementedProjectServiceServer) GetAllProjects(*EmptyRequest, ProjectService_GetAllProjectsServer) error {
 	return status.Errorf(codes.Unimplemented, "method GetAllProjects not implemented")
+}
+func (UnimplementedProjectServiceServer) CreateProjects(ProjectService_CreateProjectsServer) error {
+	return status.Errorf(codes.Unimplemented, "method CreateProjects not implemented")
+}
+func (UnimplementedProjectServiceServer) CreateAssignments(ProjectService_CreateAssignmentsServer) error {
+	return status.Errorf(codes.Unimplemented, "method CreateAssignments not implemented")
 }
 func (UnimplementedProjectServiceServer) mustEmbedUnimplementedProjectServiceServer() {}
 
@@ -232,6 +307,58 @@ func (x *projectServiceGetAllProjectsServer) Send(m *Project) error {
 	return x.ServerStream.SendMsg(m)
 }
 
+func _ProjectService_CreateProjects_Handler(srv interface{}, stream grpc.ServerStream) error {
+	return srv.(ProjectServiceServer).CreateProjects(&projectServiceCreateProjectsServer{stream})
+}
+
+type ProjectService_CreateProjectsServer interface {
+	SendAndClose(*ResponseStatus) error
+	Recv() (*Project, error)
+	grpc.ServerStream
+}
+
+type projectServiceCreateProjectsServer struct {
+	grpc.ServerStream
+}
+
+func (x *projectServiceCreateProjectsServer) SendAndClose(m *ResponseStatus) error {
+	return x.ServerStream.SendMsg(m)
+}
+
+func (x *projectServiceCreateProjectsServer) Recv() (*Project, error) {
+	m := new(Project)
+	if err := x.ServerStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
+func _ProjectService_CreateAssignments_Handler(srv interface{}, stream grpc.ServerStream) error {
+	return srv.(ProjectServiceServer).CreateAssignments(&projectServiceCreateAssignmentsServer{stream})
+}
+
+type ProjectService_CreateAssignmentsServer interface {
+	Send(*Assignment) error
+	Recv() (*Project, error)
+	grpc.ServerStream
+}
+
+type projectServiceCreateAssignmentsServer struct {
+	grpc.ServerStream
+}
+
+func (x *projectServiceCreateAssignmentsServer) Send(m *Assignment) error {
+	return x.ServerStream.SendMsg(m)
+}
+
+func (x *projectServiceCreateAssignmentsServer) Recv() (*Project, error) {
+	m := new(Project)
+	if err := x.ServerStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
 // ProjectService_ServiceDesc is the grpc.ServiceDesc for ProjectService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -249,6 +376,17 @@ var ProjectService_ServiceDesc = grpc.ServiceDesc{
 			StreamName:    "GetAllProjects",
 			Handler:       _ProjectService_GetAllProjects_Handler,
 			ServerStreams: true,
+		},
+		{
+			StreamName:    "CreateProjects",
+			Handler:       _ProjectService_CreateProjects_Handler,
+			ClientStreams: true,
+		},
+		{
+			StreamName:    "CreateAssignments",
+			Handler:       _ProjectService_CreateAssignments_Handler,
+			ServerStreams: true,
+			ClientStreams: true,
 		},
 	},
 	Metadata: "user.proto",

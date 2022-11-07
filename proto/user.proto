@@ -27,6 +27,10 @@ message Project {
 message EmptyRequest {
 }
 
+message ResponseStatus {
+    string msg = 1;
+}
+
 message Assignment {
     Project project = 1;
     repeated UserProfile assignee = 2;
@@ -40,4 +44,6 @@ service UserService {
 service ProjectService {
     rpc GetAssignment(Project) returns (Assignment);
     rpc GetAllProjects(EmptyRequest) returns (stream Project);
+    rpc CreateProjects(stream Project) returns (ResponseStatus);
+    rpc CreateAssignments(stream Project) returns (stream Assignment);
 }

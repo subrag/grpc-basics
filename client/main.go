@@ -30,6 +30,12 @@ func main() {
 	c := pb.NewProjectServiceClient(conn)
 	// getAssignment(c)
 
-	getAllProjects(c)
+	// getAllProjects(c)
+
+	projs, err := createProjects(c)
+	if err != nil {
+		log.Fatalf("Error while creating projects: %v.", err)
+	}
+	createProjAssignment(c, projs)
 
 }
