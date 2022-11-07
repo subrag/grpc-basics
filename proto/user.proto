@@ -24,6 +24,9 @@ message Project {
     int32 id = 2;
 }
 
+message EmptyRequest {
+}
+
 message Assignment {
     Project project = 1;
     repeated UserProfile assignee = 2;
@@ -36,4 +39,5 @@ service UserService {
 
 service ProjectService {
     rpc GetAssignment(Project) returns (Assignment);
+    rpc GetAllProjects(EmptyRequest) returns (stream Project);
 }
