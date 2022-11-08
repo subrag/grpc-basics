@@ -91,17 +91,19 @@ func createProjAssignment(c pb.ProjectServiceClient, projs []*pb.Project) {
 			}
 			log.Printf("Created assignment: %v", res)
 		}
-		// close(waitc)
+		close(waitc)
+		log.Printf("Completed project creation(stream revceive).")
 	}()
 
 	go func() {
 		for _, proj := range projs {
 			log.Printf("Create Assignment for %s", proj.GetName())
 			stream.Send(proj)
-			time.Sleep(1 * time.Second)
+			// time.Sleep(1 * time.Second)
 		}
+		stream.CloseSend() // Sends EOF
+		log.Printf("Completed project creation(stream send).")
 	}()
 
-	stream.CloseSend()
 	<-waitc
 }

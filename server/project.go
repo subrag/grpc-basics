@@ -73,6 +73,7 @@ func createProjAssgmtLogic(p *pb.Project, allUsers []*pb.UserProfile) (*pb.Assig
 		users = append(users, allUsers[rand.Intn(len(allUsers))])
 	}
 	log.Printf("Adding assignment: %v - %v", p, users)
+	time.Sleep(3 * time.Second)
 	return &pb.Assignment{
 		Project:  p,
 		Assignee: users,
