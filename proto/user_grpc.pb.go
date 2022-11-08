@@ -11,6 +11,7 @@ import (
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
+	emptypb "google.golang.org/protobuf/types/known/emptypb"
 )
 
 // This is a compile-time assertion to ensure that this generated file
@@ -109,7 +110,7 @@ var UserService_ServiceDesc = grpc.ServiceDesc{
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type ProjectServiceClient interface {
 	GetAssignment(ctx context.Context, in *Project, opts ...grpc.CallOption) (*Assignment, error)
-	GetAllProjects(ctx context.Context, in *EmptyRequest, opts ...grpc.CallOption) (ProjectService_GetAllProjectsClient, error)
+	GetAllProjects(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (ProjectService_GetAllProjectsClient, error)
 	CreateProjects(ctx context.Context, opts ...grpc.CallOption) (ProjectService_CreateProjectsClient, error)
 	CreateAssignments(ctx context.Context, opts ...grpc.CallOption) (ProjectService_CreateAssignmentsClient, error)
 }
@@ -131,7 +132,7 @@ func (c *projectServiceClient) GetAssignment(ctx context.Context, in *Project, o
 	return out, nil
 }
 
-func (c *projectServiceClient) GetAllProjects(ctx context.Context, in *EmptyRequest, opts ...grpc.CallOption) (ProjectService_GetAllProjectsClient, error) {
+func (c *projectServiceClient) GetAllProjects(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (ProjectService_GetAllProjectsClient, error) {
 	stream, err := c.cc.NewStream(ctx, &ProjectService_ServiceDesc.Streams[0], "/user.ProjectService/GetAllProjects", opts...)
 	if err != nil {
 		return nil, err
@@ -233,7 +234,7 @@ func (x *projectServiceCreateAssignmentsClient) Recv() (*Assignment, error) {
 // for forward compatibility
 type ProjectServiceServer interface {
 	GetAssignment(context.Context, *Project) (*Assignment, error)
-	GetAllProjects(*EmptyRequest, ProjectService_GetAllProjectsServer) error
+	GetAllProjects(*emptypb.Empty, ProjectService_GetAllProjectsServer) error
 	CreateProjects(ProjectService_CreateProjectsServer) error
 	CreateAssignments(ProjectService_CreateAssignmentsServer) error
 	mustEmbedUnimplementedProjectServiceServer()
@@ -246,7 +247,7 @@ type UnimplementedProjectServiceServer struct {
 func (UnimplementedProjectServiceServer) GetAssignment(context.Context, *Project) (*Assignment, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetAssignment not implemented")
 }
-func (UnimplementedProjectServiceServer) GetAllProjects(*EmptyRequest, ProjectService_GetAllProjectsServer) error {
+func (UnimplementedProjectServiceServer) GetAllProjects(*emptypb.Empty, ProjectService_GetAllProjectsServer) error {
 	return status.Errorf(codes.Unimplemented, "method GetAllProjects not implemented")
 }
 func (UnimplementedProjectServiceServer) CreateProjects(ProjectService_CreateProjectsServer) error {
@@ -287,7 +288,7 @@ func _ProjectService_GetAssignment_Handler(srv interface{}, ctx context.Context,
 }
 
 func _ProjectService_GetAllProjects_Handler(srv interface{}, stream grpc.ServerStream) error {
-	m := new(EmptyRequest)
+	m := new(emptypb.Empty)
 	if err := stream.RecvMsg(m); err != nil {
 		return err
 	}

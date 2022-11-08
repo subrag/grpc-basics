@@ -10,6 +10,7 @@ import (
 	"log"
 
 	pb "github.com/subrag/grpc-basics/proto"
+	"google.golang.org/protobuf/types/known/emptypb"
 )
 
 func (s *Server) GetAssignment(ctx context.Context, p *pb.Project) (*pb.Assignment, error) {
@@ -18,7 +19,7 @@ func (s *Server) GetAssignment(ctx context.Context, p *pb.Project) (*pb.Assignme
 
 }
 
-func (s *Server) GetAllProjects(in *pb.EmptyRequest, stream pb.ProjectService_GetAllProjectsServer) error {
+func (s *Server) GetAllProjects(in *emptypb.Empty, stream pb.ProjectService_GetAllProjectsServer) error {
 	log.Print("Server streaming.")
 	for i := 0; i < len(s.dbProj); i++ {
 		time.Sleep(2 * time.Second)

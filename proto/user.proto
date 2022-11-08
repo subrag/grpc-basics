@@ -4,6 +4,7 @@ package user;
 
 
 import "google/protobuf/timestamp.proto";
+import "google/protobuf/empty.proto";
 option go_package = "github.com/subrag/grpc-basics/proto";
 
 message UserProfile {
@@ -24,9 +25,6 @@ message Project {
     int32 id = 2;
 }
 
-message EmptyRequest {
-}
-
 message ResponseStatus {
     string msg = 1;
 }
@@ -43,7 +41,7 @@ service UserService {
 
 service ProjectService {
     rpc GetAssignment(Project) returns (Assignment);
-    rpc GetAllProjects(EmptyRequest) returns (stream Project);
+    rpc GetAllProjects(google.protobuf.Empty) returns (stream Project);
     rpc CreateProjects(stream Project) returns (ResponseStatus);
     rpc CreateAssignments(stream Project) returns (stream Assignment);
 }

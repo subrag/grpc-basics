@@ -9,6 +9,7 @@ import (
 
 	pb "github.com/subrag/grpc-basics/proto"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials"
 )
 
 var addr string = "0.0.0.0:5002"
@@ -21,21 +22,28 @@ type Server struct {
 }
 
 func main() {
-	// r := gin.Default()
-
-	// r.GET("/status", func(ctx *gin.Context) {
-	// 	ctx.JSON(http.StatusOK, gin.H{
-	// 		"status": "OK",
-	// 	})
-	// })
-	// r.Run(":5002")
 	user, proj, asgmt := LoadData()
 	log.Print(user, proj, asgmt)
 	lis, err := net.Listen("tcp", addr)
 	if err != nil {
 		log.Fatalf("Failed to listen on: %v", addr)
 	}
-	s := grpc.NewServer()
+	defer lis.Close()
+
+	tls := false
+	opts := []grpc.ServerOption{}
+
+	if tls {
+		certFile := "ssl/server.crt"
+		keyFile := "ssl/server.pem"
+		creds, err := credentials.NewClientTLSFromFile(certFile, keyFile)
+		if err != nil {
+			log.Fatalf("Error in TLS: %v", err)
+		}
+		opts = append(opts, grpc.Creds(creds))
+	}
+
+	s := grpc.NewServer(opts...)
 	pb.RegisterProjectServiceServer(s, &Server{
 		dbUser:       user,
 		dbProj:       proj,

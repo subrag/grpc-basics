@@ -7,6 +7,7 @@ import (
 	"time"
 
 	pb "github.com/subrag/grpc-basics/proto"
+	"google.golang.org/protobuf/types/known/emptypb"
 )
 
 func getAssignment(c pb.ProjectServiceClient) {
@@ -24,7 +25,7 @@ func getAssignment(c pb.ProjectServiceClient) {
 func getAllProjects(c pb.ProjectServiceClient) {
 	log.Println("Get all project invoked")
 
-	req := &pb.EmptyRequest{}
+	req := &emptypb.Empty{}
 	stream, err := c.GetAllProjects(context.Background(), req)
 
 	if err != nil {
